@@ -1,3 +1,6 @@
+// Problem can be found at:
+// https://bbs.wenxuecity.com/znjy/6114116.html
+
 #include <bits/stdc++.h>
 using namespace std;
 
