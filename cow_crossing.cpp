@@ -1,3 +1,5 @@
+// Problem: http://www.usaco.org/index.php?page=viewproblem2&cpid=858
+
 #include <bits/stdc++.h>
 using namespace std;
 

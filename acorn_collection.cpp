@@ -1,5 +1,4 @@
-// Problem can be found at:
-// https://bbs.wenxuecity.com/znjy/6114116.html
+// Problem: http://www.usaco.org/index.php?page=viewproblem2&cpid=342
 
 #include <bits/stdc++.h>
 using namespace std;
