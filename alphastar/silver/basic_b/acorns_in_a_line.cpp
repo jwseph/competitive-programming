@@ -15,7 +15,6 @@ void ms(int l, int r) {
     res += (r-l)*(h-l);
 }
 
-
 int main() {
     cin >> N;
     N = 1<<N;
