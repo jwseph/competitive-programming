@@ -10,7 +10,7 @@ bool ok(const string& S) {
     for (int i = 0; i < K; ++i) {
         char D = S[i];
         if (D > 'Q') --D;
-        D = (D-'A')/3+2+'0';
+        D = (D-'A')/3+'2';
         if (D != ID[i]) return false;
     }
     return true;
