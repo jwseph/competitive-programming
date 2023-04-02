@@ -6,14 +6,10 @@ using namespace std;
 int N, M, C, A[MAXN];
 
 bool sol(int W) {
-    int t = INT_MIN, i, c, m = 0;
-    for (i = 0; i < N && m <= M; ++i) {
-        if (A[i] > t+W || c == 0) {
-            t = A[i];
-            c = C;
-            ++m;
-        }
-        --c;
+    int i = 0;
+    for (int m = 0; m < M && i < N; ++m) {
+        int j = upper_bound(A, A+N, A[i]+W) - A;
+        i = min(i+C, j);
     }
     return i == N;
 }
