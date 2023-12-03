@@ -29,6 +29,7 @@ tuple<int, int, int> E[MAXN];
 DSU dsu(MAXN);
 
 int main() {
+    // Could also use binary search to maximize height bound
     cin >> N >> M;
     for (int i = 0; i < N; ++i) {
         int j; cin >> j; --j;
