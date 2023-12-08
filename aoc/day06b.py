@@ -18,7 +18,6 @@ for time, distance in zip(times, distances):
         else: l = h+1
 
     res_l = l
-    print('part1')
 
     l, r = M, time
     while l < r:
