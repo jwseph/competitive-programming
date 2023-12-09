@@ -20,7 +20,7 @@ for cur in curs:
     while not cur.endswith('Z'):
         cur = A[cur][0] if cmds[i%len(cmds)] == 'L' else A[cur][1]
         i += 1
-    # works because len(cmds) is prime
+    # works because len(cmds) and cycle lengths are prime
     res = lcm(res, i)
 
 print(res)
