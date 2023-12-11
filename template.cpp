@@ -4,7 +4,11 @@ using namespace std;
 #define MOD 1000000007
 #define ll long long
 #define vi vector<int>
+#define si set<int>
+#define ui unordered_set<int>
 #define mii map<int, int>
+#define uii unordered_map<int, int>
+#define uivi unordered_map<int, vi>
 #define pii pair<int, int>
 #define tiii tuple<int, int, int>
 
