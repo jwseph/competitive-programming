@@ -3,6 +3,8 @@ using namespace std;
 
 #define MOD 1000000007
 #define ll long long
+#define vi vector<int>
+#define mii map<int, int>
 #define pii pair<int, int>
 #define tiii tuple<int, int, int>
 
