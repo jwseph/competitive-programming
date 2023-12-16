@@ -2,6 +2,9 @@ from functools import cache
 from math import gcd, lcm, sqrt
 from collections import Counter
 import math
+import sys
+
+sys.setrecursionlimit(10**6)
 
 MOD = 10**9+7
 

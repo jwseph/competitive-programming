@@ -4,9 +4,6 @@ A = open('aoc/day16.in').read().splitlines()
 R = len(A)
 C = len(A[0])
 
-import sys
-sys.setrecursionlimit(100000)
-
 def sol(r, c, dr, dc):
 
     V = set()

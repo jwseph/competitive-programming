@@ -4,8 +4,6 @@ A = open('aoc/day16.in').read().splitlines()
 R = len(A)
 C = len(A[0])
 
-import sys
-sys.setrecursionlimit(100000)
 V = set()
 lit = [[0]*C for r in range(R)]
 res = 0
