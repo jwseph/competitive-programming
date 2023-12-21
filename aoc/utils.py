@@ -40,6 +40,11 @@ class DSU:
     def connected(self):
         return all(self.find(i) == self.find(0) for i in range(len(self.rank)))
 
+def pow(n, p, mod=MOD):
+    if p == 0: return 1
+    if p%2 == 0: return pow(n*n % mod, p//2, mod)
+    return n*pow(n, p-1, mod) % mod
+
 @cache
 def factor(num):
     if num == 1: return []
@@ -48,7 +53,13 @@ def factor(num):
         return [i]+factor(num//i)
     return [num]
 
-def choose(n, k, mod=MOD):
+def phi(num):
+    res = num
+    for p in set(factor(num)):
+        res = res*(p-1)//p
+    return res
+
+def choose2(n, k, mod=MOD):
     res = 1
     for i in range(1, k+1):
         res = res*i % mod
@@ -57,8 +68,19 @@ def choose(n, k, mod=MOD):
         res = res*i % mod
     return res
 
-def pow(n, p, mod=MOD):
-    return math.pow(n, p, mod)
+def precompute(N, mod=MOD):
+    global fac, inv
+    fac, inv = [0]*(N+1), [0]*(N+1)
+    fac[0] = 1
+    for i in range(1, N+1):
+        fac[i] = i*fac[i-1] % mod
+    inv[N] = pow(fac[N], mod-2, mod)
+    for i in range(N)[::-1]:
+        inv[i] = (i+1)*inv[i+1] % mod
+    return fac, inv
+
+def choose(n, k, mod=MOD):
+    return fac[n]*inv[k] % mod * inv[n-k] % mod
 
 def sieve(N):
     N += 1

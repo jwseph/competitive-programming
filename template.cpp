@@ -12,7 +12,7 @@ using namespace std;
 #define pii pair<int, int>
 #define tiii tuple<int, int, int>
 
-int POW(int a, int b) {
+int exp(int a, int b) {
     int res = 1;
     while (b) {
         if (b&1) res = (ll)res*a % MOD;
@@ -22,8 +22,12 @@ int POW(int a, int b) {
     return res;
 }
 
-int GCD(int a, int b) {
-    return a%b == 0 ? b : GCD(b, a%b);
+int gcd(int a, int b) {
+    return a%b == 0 ? b : gcd(b, a%b);
+}
+
+int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
 }
 
 struct DSU {
@@ -45,3 +49,19 @@ struct DSU {
         rank[U] += rank[U] == rank[V];
     }
 };
+
+ll fac[MAXX+1];
+void factorial() {
+    fac[0] = 1;
+    for (int i = 1; i <= MAXX; ++i) fac[i] = fac[i-1] * i % MOD;
+}
+
+ll inv[MAXX+1];
+void inverses() {
+    inv[MAXX] = exp(fac[MAXX], MOD-2);
+    for (int i = MAXX; i >= 1; --i) inv[i-1] = inv[i] * i % MOD;
+}
+
+int choose(int n, int k) {
+    return fac[n] * inv[k] % MOD * inv[n-k] % MOD;
+}
