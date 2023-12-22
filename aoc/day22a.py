@@ -14,7 +14,7 @@ for line in lines:
 
 from copy import deepcopy
 
-def fall(arr, cut=False):
+def fall(arr):
     arr = deepcopy(arr)
     res = 0
     vst = set()
@@ -44,15 +44,15 @@ def fall(arr, cut=False):
         arr[i] = (x1, y1, z1, x2, y2, z2)
     return arr, res
 res = 0
-print(bricks)
+# print(bricks)
 bricks, fell = fall(bricks)
 while fell:
     bricks, fell = fall(bricks)
 print(bricks)
-# exit()
+
 for i in range(len(bricks)):
     tmp = bricks[:i]+bricks[i+1:]
-    _, changed = fall(tmp, True)
+    _, changed = fall(tmp)
     print('changed', changed)
     if not changed: res += 1
 print(res)
