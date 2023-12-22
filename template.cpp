@@ -7,6 +7,9 @@ using namespace std;
 #define pb push_back
 #define all(v) (v).begin(), (v).end()
 
+const int d4r[4] = {0, 1, 0, -1}, d4c[4] = {1, 0, -1, 0}
+const int d8r[8] = {0, -1, -1, -1, 0, 1, 1, 1}, d8c[8] = {1, 1, 0, -1, -1, -1, 0, 1};
+
 int exp(int a, int b) {
     int res = 1;
     while (b) {
