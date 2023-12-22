@@ -31,22 +31,17 @@ int lcm(int a, int b) {
 }
 
 struct DSU {
-    vector<int> parent, rank;
-    DSU(int n) {
-        rank.resize(n, 0);
-        parent.resize(n);
-        for (int i = 0; i < n; ++i) parent[i] = i;
-    }
-    int find(int u) {
-        if (parent[u] == u) return u;
-        return parent[u] = find(parent[u]);
-    }
-    void unite(int u, int v) {
-        int U = find(u), V = find(v);
-        if (U == V) return;
-        if (rank[U] > rank[V]) swap(U, V);
-        parent[U] = V;
-        rank[U] += rank[U] == rank[V];
+    vector<int> p;
+    DSU(int n) { p.assign(n, -1); }
+    int size(int i) { return -p[find(i)]; }
+    int find(int i) { return p[i] < 0 ? i : p[i] = find(p[i]); }
+    bool unite(int i, int j) {
+        i = find(i), j = find(j);
+        if (i == j) return 0;
+        if (p[i] > p[j]) swap(i, j);
+        p[i] += p[j];
+        p[j] = i;
+        return 1;
     }
 };
 
@@ -65,3 +60,29 @@ void inverses() {
 int choose(int n, int k) {
     return fac[n] * inv[k] % MOD * inv[n-k] % MOD;
 }
+
+struct fr {
+    int n, d;
+    fr() { n = d = 0; }
+    fr(int n, int d) {
+        if (d < 0) d = -d, n = -n;
+        this->n = n, this->d = d;
+    }
+    fr& operator=(fr f) { swap(*this, f); return *this; }
+    friend void swap(fr& a, fr& b) { swap(a.n, b.n); swap(a.d, b.d); }
+    friend ostream& operator<<(ostream& out, const fr& f) { return out << f.n << '/' << f.d; }
+    friend bool operator<(const fr& a, const fr& b) { return (ll)a.n*b.d < (ll)b.n*a.d; }
+    friend bool operator>(const fr& a, const fr& b) { return b < a; }
+    friend bool operator<=(const fr& a, const fr& b) { return !(a > b); }
+    friend bool operator>=(const fr& a, const fr& b) { return !(a < b); }
+    friend bool operator==(const fr& a, const fr& b) { return a <= b && a >= b; }
+};
+
+// typedef pair<int, int> fr;
+// fr make_fr(int n, int d) {
+//     if (d < 0) d = -d, n = -n;
+//     return {n, d};
+// }
+// bool cmp(const fr& a, const fr& b) {
+//     return (ll)a.first*b.second < (ll)b.first*a.second;
+// }
