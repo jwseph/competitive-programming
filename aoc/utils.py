@@ -3,6 +3,7 @@ from math import gcd, lcm, sqrt
 from collections import Counter
 import math
 import sys
+from fractions import Fraction
 
 sys.setrecursionlimit(10**6)
 
@@ -95,3 +96,28 @@ def sieve(N):
                 j += i
         i += 1
     return P
+
+def rref(A) -> list[list[Fraction]]:
+    '''For large integer systems'''
+    R, C = len(A), len(A[0])
+    A = [[Fraction(num) for num in row] for row in A]
+    for r in range(R):
+        r2, c = None, None
+        for j in range(C)[::-1]:
+            for i in range(r, R)[::-1]:
+                if A[i][j] != 0:
+                    r2, c = i, j
+        if r2 is None: break
+        A[r], A[r2] = A[r2], A[r]
+        for j in range(C)[::-1]:
+            A[r][j] /= A[r][c]
+        for i in range(R):
+            if i == r: continue
+            f = -A[i][c]/A[r][c]
+            for j in range(C):
+                A[i][j] += f*A[r][j]
+    return A
+
+def rref2(A):
+    import sympy as sp
+    return sp.Matrix(A).rref()[0].tolist()
