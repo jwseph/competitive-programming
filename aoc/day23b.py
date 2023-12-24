@@ -4,8 +4,6 @@ A = open('aoc/day23.in').read().splitlines()
 R = len(A)
 C = len(A[0])
 
-from math import inf
-
 vtx = {}
 for r in range(R):
     for c in range(C):

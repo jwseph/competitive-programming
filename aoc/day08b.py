@@ -1,6 +1,6 @@
-lines = open('aoc/day08.in').read().splitlines()
+from utils import *
 
-from math import lcm
+lines = open('aoc/day08.in').read().splitlines()
 
 cmds = lines[0]
 rest = lines[2:]

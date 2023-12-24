@@ -5,7 +5,6 @@ R = len(A)
 C = len(A[0])
 
 def sol(stepmax):
-    from collections import deque
     q = deque()
     vst = set()
 

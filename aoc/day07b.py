@@ -1,6 +1,6 @@
-lines = open('aoc/day07.in').read().splitlines()
+from utils import *
 
-from collections import Counter
+lines = open('aoc/day07.in').read().splitlines()
 
 chs = 'J23456789TQKA'
 

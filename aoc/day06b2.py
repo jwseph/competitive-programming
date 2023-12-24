@@ -1,8 +1,8 @@
+from utils import *
+
 lines = open('aoc/day06.in').read().splitlines()
 times = lines[0].split()[1:]
 distances = lines[1].split()[1:]
-
-from math import ceil
 
 time = int(''.join(times))
 distance = int(''.join(distances))

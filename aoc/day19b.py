@@ -24,7 +24,7 @@ for line in lines1:
     for rule in other.split(',')[-1:]:
         b = rule
         M[i].append((b, (2,)))
-from copy import deepcopy
+
 def sol(x, name):
     if name == 'R': return 0
     if name == 'A':

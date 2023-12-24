@@ -9,8 +9,6 @@ for line in lines:
     vx, vy, vz = list(map(int, right.split(', ')))
     arr.append((px, py, pz, vx, vy, vz))
 
-from copy import deepcopy
-
 def det(A):
     N = len(A)
     if N == 1: return A[0][0]

@@ -9,8 +9,6 @@ for line in lines:
     vx, vy, vz = list(map(int, right.split(', ')))
     arr.append((px, py, pz, vx, vy, vz))
 
-from math import inf
-
 V = set()
 
 def sol(x1, y1, z1, v1x, v1y, v1z, x2, y2, z2, v2x, v2y, v2z):

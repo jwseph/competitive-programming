@@ -1,5 +1,4 @@
 from utils import *
-from queue import PriorityQueue
 
 A = open('aoc/day17.in').read().splitlines()
 R = len(A)
@@ -10,14 +9,14 @@ V = set()
 def add(w, r, c, dr, dc):
     if r < 0 or r >= R or c < 0 or c >= C: return
     if (r, c, dr, dc) in V: return
-    Q.put((w, r, c, dr, dc))
+    heappush(Q, (w, r, c, dr, dc))
 
-Q = PriorityQueue()
-Q.put((0, 0, 0, 1, 0))
-Q.put((0, 0, 0, 0, 1))
+Q = []
+heappush(Q, (0, 0, 0, 1, 0))
+heappush(Q, (0, 0, 0, 0, 1))
 res = 10**9
-while not Q.empty():
-    w, r, c, dr, dc = Q.get()
+while Q:
+    w, r, c, dr, dc = heappop(Q)
     if (r, c, dr, dc) in V: continue
     V.add((r, c, dr, dc))
     if (r, c) == (R-1, C-1):

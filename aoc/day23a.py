@@ -3,7 +3,6 @@ from utils import *
 A = open('aoc/day23.in').read().splitlines()
 R = len(A)
 C = len(A[0])
-from math import inf
 V = set()
 
 def dfs(r, c):

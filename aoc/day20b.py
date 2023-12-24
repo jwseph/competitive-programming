@@ -23,8 +23,6 @@ for loc in module_type:
     if module_type[loc] != '&': continue
     data2[loc] = {loc2: 0 for loc2 in module_type if loc in adj[loc2]}
 
-from collections import deque
-
 res = [0]*2
 presses = 0
 vst = {'ln': 0, 'dr': 0, 'zx': 0, 'vn': 0}

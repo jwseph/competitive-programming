@@ -4,7 +4,6 @@ A = open('aoc/day21.in').read().splitlines()
 R = len(A)
 C = len(A[0])
 
-from collections import deque
 q = deque()
 vst = set()
 

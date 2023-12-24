@@ -12,8 +12,6 @@ for line in lines:
     if y1 > y2: y1, y2 = y2, y1
     bricks.append((x1, y1, z1, x2, y2, z2))
 
-from copy import deepcopy
-
 def fall(arr):
     arr = deepcopy(arr)
     res = 0

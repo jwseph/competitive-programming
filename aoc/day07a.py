@@ -1,6 +1,6 @@
-lines = open('aoc/day07.in').read().splitlines()
+from utils import *
 
-from collections import Counter
+lines = open('aoc/day07.in').read().splitlines()
 
 def calc(s):
     if s[0] == s[1] == s[2] == s[3] == s[4]: return 7
