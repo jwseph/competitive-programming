@@ -6,8 +6,8 @@ using namespace std;
 int N, A[MAXN];
 
 int main() {
-    freopen("crossroad.in", "r", stdin);
-    freopen("crossroad.out", "w", stdout);
+    ifstream cin("crossroad.in");
+    ofstream cout("crossroad.out");
     cin >> N;
     memset(A, -1, sizeof A);
     int res = 0;
