@@ -31,13 +31,11 @@ int main() {
         }
         string res;
         reverse(begin(V), end(V));
-        int per = 0;
         for (string& T: V) {
             if (T.empty()) continue;
             reverse(begin(T), end(T));
             res += T;
             res += '.';
-            ++per;
         }
         res.pop_back();
         cout << res << endl;
