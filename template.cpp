@@ -5,8 +5,10 @@ using namespace std;
 #define ll long long
 #define vr vector
 #define uset unordered_set
+#define umap unordered_map
 #define pii pair<int, int>
 #define pb push_back
+#define ins insert
 #define all(v) (v).begin(), (v).end()
 
 #include <ext/pb_ds/assoc_container.hpp>
@@ -14,8 +16,12 @@ using namespace std;
 using namespace __gnu_pbds;
 template <typename T> using oset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-const int d4r[4] = {0, 1, 0, -1}, d4c[4] = {1, 0, -1, 0}
+const int d4r[4] = {0, 1, 0, -1}, d4c[4] = {1, 0, -1, 0};
 const int d8r[8] = {0, -1, -1, -1, 0, 1, 1, 1}, d8c[8] = {1, 1, 0, -1, -1, -1, 0, 1};
+
+void fastio() {
+    cin.tie(0), ios::sync_with_stdio(0);
+}
 
 int exp(int a, int b) {
     int res = 1;
@@ -57,7 +63,7 @@ struct Tree {
     vector<T> t; int n;
     Tree(int n): t(2*n, def), n(n) {}
     void update(int i, T v) {
-        for (t[i += n] = v; i /= 2;) t[i] = f(t[2*i], t[2*i+1]);
+        for (t[i += n] = v; i /= 2;) t[i] = f(t[i*2], t[i*2+1]);
     }
     T query(int l, int r) {
         T al = def, ar = def;
@@ -69,21 +75,21 @@ struct Tree {
     }
 };
 
-ll fac[MAXX+1];
-void factorial() {
-    fac[0] = 1;
-    for (int i = 1; i <= MAXX; ++i) fac[i] = fac[i-1] * i % MOD;
-}
+// ll fac[MAXX+1];
+// void factorial() {
+//     fac[0] = 1;
+//     for (int i = 1; i <= MAXX; ++i) fac[i] = fac[i-1] * i % MOD;
+// }
 
-ll inv[MAXX+1];
-void inverses() {
-    inv[MAXX] = exp(fac[MAXX], MOD-2);
-    for (int i = MAXX; i >= 1; --i) inv[i-1] = inv[i] * i % MOD;
-}
+// ll inv[MAXX+1];
+// void inverses() {
+//     inv[MAXX] = exp(fac[MAXX], MOD-2);
+//     for (int i = MAXX; i >= 1; --i) inv[i-1] = inv[i] * i % MOD;
+// }
 
-int choose(int n, int k) {
-    return fac[n] * inv[k] % MOD * inv[n-k] % MOD;
-}
+// int choose(int n, int k) {
+//     return fac[n] * inv[k] % MOD * inv[n-k] % MOD;
+// }
 
 struct fr {
     int n, d;
@@ -110,3 +116,17 @@ struct fr {
 // bool cmp(const fr& a, const fr& b) {
 //     return (ll)a.first*b.second < (ll)b.first*a.second;
 // }
+
+struct p_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
