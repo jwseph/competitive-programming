@@ -2,10 +2,9 @@
 using namespace std;
 
 #define MOD 1000000007
+#define sz(x) ((int)(x).size())
 #define ll long long
 #define vr vector
-#define uset unordered_set
-#define umap unordered_map
 #define pii pair<int, int>
 #define pb push_back
 #define ins insert
@@ -42,7 +41,7 @@ int lcm(int a, int b) {
 }
 
 struct DSU {
-    vector<int> p;
+    vr<int> p;
     DSU(int n) { p.assign(n, -1); }
     int size(int i) { return -p[find(i)]; }
     int find(int i) { return p[i] < 0 ? i : p[i] = find(p[i]); }
@@ -60,7 +59,7 @@ struct Tree {
     typedef int T;
     static constexpr T def = INT_MAX;
     T f(T a, T b) { return min(a, b); }
-    vector<T> t; int n;
+    vr<T> t; int n;
     Tree(int n): t(2*n, def), n(n) {}
     void update(int i, T v) {
         for (t[i += n] = v; i /= 2;) t[i] = f(t[i*2], t[i*2+1]);
@@ -72,6 +71,42 @@ struct Tree {
             if (r&1) ar = f(t[--r], ar);
         }
         return f(al, ar);
+    }
+};
+
+// struct BIT {
+//     vr<ll> t;
+//     BIT(int n): t(n) {}
+//     void update(int i, int v) {
+//         for (; i < sz(t); i |= i+1) t[i] += v;
+//     }
+//     ll query(int i) {
+//         ll res = 0;
+//         for (; i; i &= i-1) res += t[i-1];
+//         return res;
+//     }
+// };
+
+template<int...>
+struct BIT {
+    int v = 0;
+    void update(int v) { this->v += v; }
+    ll query() { return v; }
+};
+
+template<int N, int... Ns>
+struct BIT<N, Ns...> {
+    BIT<Ns...> bit[N];
+    template<typename... Ts>
+    void update(int i, Ts... args) {
+        for (; i < N; i |= i+1) bit[i].update(args...);
+    }
+    template<typename... Ts>
+    ll query(int l, int r, Ts... args) {
+        ll res = 0;
+        for (; r; r &= r-1) res += bit[r-1].query(args...);
+        for (; l; l &= l-1) res -= bit[l-1].query(args...);
+        return res;
     }
 };
 
@@ -117,7 +152,7 @@ struct fr {
 //     return (ll)a.first*b.second < (ll)b.first*a.second;
 // }
 
-struct p_hash {
+struct chash {
     static uint64_t splitmix64(uint64_t x) {
         // http://xorshift.di.unimi.it/splitmix64.c
         x += 0x9e3779b97f4a7c15;
@@ -130,3 +165,5 @@ struct p_hash {
         return splitmix64(x + FIXED_RANDOM);
     }
 };
+template<class K, class V> using umap = unordered_map<K, V, chash>;
+template<class K> using uset = unordered_set<K, chash>;
