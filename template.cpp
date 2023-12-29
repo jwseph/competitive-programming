@@ -6,6 +6,8 @@ using namespace std;
 #define ll long long
 #define vr vector
 #define pii pair<int, int>
+#define f first
+#define s second
 #define pb push_back
 #define ins insert
 #define all(v) (v).begin(), (v).end()
@@ -14,6 +16,7 @@ using namespace std;
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 template <typename T> using oset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+// order_of_key(v): i, find_by_order(i): v
 
 const int d4r[4] = {0, 1, 0, -1}, d4c[4] = {1, 0, -1, 0};
 const int d8r[8] = {0, -1, -1, -1, 0, 1, 1, 1}, d8c[8] = {1, 1, 0, -1, -1, -1, 0, 1};
@@ -143,13 +146,13 @@ struct fr {
     friend bool operator==(const fr& a, const fr& b) { return a <= b && a >= b; }
 };
 
-// typedef pair<int, int> fr;
+// typedef pii fr;
 // fr make_fr(int n, int d) {
 //     if (d < 0) d = -d, n = -n;
 //     return {n, d};
 // }
 // bool cmp(const fr& a, const fr& b) {
-//     return (ll)a.first*b.second < (ll)b.first*a.second;
+//     return (ll)a.f*b.s < (ll)b.f*a.s;
 // }
 
 struct chash {
