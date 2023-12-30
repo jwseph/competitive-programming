@@ -4,7 +4,6 @@ using namespace std;
 #define MOD 1000000007
 #define sz(x) ((int)(x).size())
 #define ll long long
-#define str string
 #define vr vector
 #define pii pair<int, int>
 #define f first
@@ -36,11 +35,11 @@ int exp(int a, int b) {
     return res;
 }
 
-int gcd(int a, int b) {
+ll gcd(ll a, ll b) {
     return a%b == 0 ? b : gcd(b, a%b);
 }
 
-int lcm(int a, int b) {
+ll lcm(ll a, ll b) {
     return a / gcd(a, b) * b;
 }
 
@@ -171,3 +170,15 @@ struct chash {
 };
 template<class K, class V> using umap = unordered_map<K, V, chash>;
 template<class K> using uset = unordered_set<K, chash>;
+
+int NT, a, b;
+
+int main() {
+    cin >> NT;
+    while (NT--) {
+        cin >> a >> b;
+        ll x = lcm(a, b);
+        if (b%a == 0) x *= b/a;
+        cout << x << endl;
+    }
+}

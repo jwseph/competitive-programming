@@ -4,7 +4,6 @@ using namespace std;
 #define MOD 1000000007
 #define sz(x) ((int)(x).size())
 #define ll long long
-#define str string
 #define vr vector
 #define pii pair<int, int>
 #define f first
@@ -171,3 +170,40 @@ struct chash {
 };
 template<class K, class V> using umap = unordered_map<K, V, chash>;
 template<class K> using uset = unordered_set<K, chash>;
+
+int NT, N;
+
+vr<string> sol() {
+    if (N == 1) return {"1"};
+    if (N == 3) return {"169", "196", "961"};
+    vr<string> res;
+    for (int w = (N-3)/2; w >= 0; --w) {
+        string S(N, '0');
+        S[0] = '1';
+        S[1+w] = '6';
+        S[2*(1+w)] = '9';
+        res.pb(S);
+    }
+    for (int w = (N-3)/2; w >= 0; --w) {
+        string S(N, '0');
+        S[0] = '9';
+        S[1+w] = '6';
+        S[2*(1+w)] = '1';
+        res.pb(S);
+    }
+    string S(N, '0');
+    S[0] = '1';
+    S[1] = '9';
+    S[2] = '6';
+    res.pb(S);
+    return res;
+}
+
+int main() {
+    cin >> NT;
+    while (NT--) {
+        cin >> N;
+        auto res = sol();
+        for (string& s: res) cout << s << endl;
+    }
+}

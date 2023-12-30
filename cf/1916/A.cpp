@@ -4,7 +4,6 @@ using namespace std;
 #define MOD 1000000007
 #define sz(x) ((int)(x).size())
 #define ll long long
-#define str string
 #define vr vector
 #define pii pair<int, int>
 #define f first
@@ -171,3 +170,49 @@ struct chash {
 };
 template<class K, class V> using umap = unordered_map<K, V, chash>;
 template<class K> using uset = unordered_set<K, chash>;
+
+//2023 = 7*17*17
+
+#define MAXN 5
+
+int NT, N, K;
+
+bool sol() {
+    int a = 0, b = 0;
+    bool r = 1;
+    for (int i = 0; i < N; ++i) {
+        int x; cin >> x;
+        while (x%7 == 0) {
+            x /= 7;
+            ++a;
+        }
+        while (x%17 == 0) {
+            x /= 17;
+            ++b;
+        }
+        r &= x == 1;
+    }
+    if (!(r && a <= 1 && b <= 2)) {
+        cout << "NO" << endl;
+        return 0;
+    }
+    cout << "YES" << endl;
+    int cur = 1;
+    for (; a < 1; ++a) cur *= 7;
+    for (; b < 2; ++b) cur *= 17;
+    cout << cur << ' ';
+    --K;
+    while (K--) {
+        cout << "1 ";
+    }
+    cout << endl;
+    return 1;
+}
+
+int main() {
+    cin >> NT;
+    while (NT--) {
+        cin >> N >> K;
+        sol();
+    }
+}
