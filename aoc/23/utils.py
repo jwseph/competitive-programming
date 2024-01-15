@@ -54,8 +54,8 @@ def pow(n, p, mod=MOD):
 def factor(num):
     if num == 1: return []
     for i in range(2, int(sqrt(num))+1):
-        if num%i > 0: continue
-        return [i]+factor(num//i)
+        if num%i == 0:
+            return [i]+factor(num//i)
     return [num]
 
 def phi(num):
@@ -134,3 +134,18 @@ def read(file):
 
 def readlines(file):
     return read(file).splitlines()
+
+class RabinKarp:
+    def __init__(self, A):
+        self.MOD = MOD = 344555666677777
+        self.pre = pre = [0]
+        self.pinvs = pinvs = [1]
+        pwr = 1
+        P = 37
+        Pinv = pow(P, MOD-2, MOD)
+        for x in A:
+            pwr = pwr*P % MOD
+            pre.append((pre[-1] + x*pwr) % MOD)
+            pinvs.append(pinvs[-1]*Pinv % MOD)
+    def query(self, i, j):
+        return (self.pre[j] - self.pre[i]) * self.pinvs[i] % self.MOD
