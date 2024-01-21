@@ -94,6 +94,7 @@ def sieve(N):
         if not P[i]: continue
         for j in range(i*i, N+1, i):
             P[j] = False
+    return P
 
 def rref(A) -> list[list[Fraction]]:
     '''For large integer systems'''
