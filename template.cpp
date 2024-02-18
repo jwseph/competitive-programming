@@ -13,12 +13,6 @@ using namespace std;
 #define ins insert
 #define all(v) (v).begin(), (v).end()
 
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-template <typename T> using oset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-// order_of_key(v): i, find_by_order(i): v
-
 const int d4r[4] = {0, 1, 0, -1}, d4c[4] = {1, 0, -1, 0};
 const int d8r[8] = {0, -1, -1, -1, 0, 1, 1, 1}, d8c[8] = {1, 1, 0, -1, -1, -1, 0, 1};
 
@@ -45,7 +39,7 @@ int lcm(int a, int b) {
 }
 
 struct DSU {
-    vr<int> p;
+    vector<int> p;
     DSU(int n) { p.assign(n, -1); }
     int size(int i) { return -p[find(i)]; }
     int find(int i) { return p[i] < 0 ? i : p[i] = find(p[i]); }
@@ -63,7 +57,7 @@ struct Tree {
     typedef int T;
     static constexpr T def = INT_MAX;
     T f(T a, T b) { return min(a, b); }
-    vr<T> t; int n;
+    vector<T> t; int n;
     Tree(int n): t(2*n, def), n(n) {}
     void update(int i, T v) {
         for (t[i += n] = v; i /= 2;) t[i] = f(t[i*2], t[i*2+1]);
@@ -101,11 +95,11 @@ struct BIT {
 template<int N, int... Ns>
 struct BIT<N, Ns...> {
     BIT<Ns...> bit[N];
-    template<typename... Ts>
+    template<class... Ts>
     void update(int i, Ts... args) {
         for (; i < N; i |= i+1) bit[i].update(args...);
     }
-    template<typename... Ts>
+    template<class... Ts>
     ll query(int l, int r, Ts... args) {
         ll res = 0;
         for (; r; r &= r-1) res += bit[r-1].query(args...);
@@ -171,3 +165,25 @@ struct chash {
 };
 template<class K, class V> using umap = unordered_map<K, V, chash>;
 template<class K> using uset = unordered_set<K, chash>;
+
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+template<class K> using oset = tree<K, null_type, less<K>, rb_tree_tag, tree_order_statistics_node_update>;
+// order_of_key(v): i, find_by_order(i): v
+
+#include <ext/pb_ds/assoc_container.hpp>
+using namespace __gnu_pbds;
+template<class K, class V> using hmap = gp_hash_table<K, V, chash>;
+
+vector<int> prefix(vector<int> A) {
+    int N = A.size();
+    vector<int> pi(N);
+    for (int i = 1; i < N; ++i) {
+        int j = pi[i-1];
+        while (j && A[i] != A[j]) j = pi[j-1];
+        j += A[i] == A[j];
+        pi[i] = j;
+    }
+    return pi;
+}

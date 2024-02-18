@@ -1,12 +1,14 @@
 from functools import cache
-from math import gcd, lcm, sqrt, inf, ceil, prod
+from math import gcd, lcm, sqrt, isqrt, inf, ceil, prod
 from collections import Counter, deque, defaultdict
 from heapq import heappush, heappop
+from bisect import bisect_left, bisect_right
 from fractions import Fraction
 from copy import deepcopy
 from time import perf_counter
 import math
 import sys
+import random
 
 sys.setrecursionlimit(10**6)
 
@@ -44,11 +46,6 @@ class DSU:
         return -self.p[self.find(i)]
     def sizes(self):
         return [-s for s in self.p if s < 0]
-
-# def pow(n, p, mod=MOD):
-#     if p == 0: return 1
-#     if p%2 == 0: return pow(n*n % mod, p//2, mod)
-#     return n*pow(n, p-1, mod) % mod
 
 @cache
 def factor(num):
@@ -130,8 +127,19 @@ def read(file):
 def readlines(file):
     return read(file).splitlines()
 
+class Trie(dict):
+    def __init__(self, A=()):
+        super().__init__()
+        for s in A: self.insert(s)
+    def insert(t, s):
+        for c in s:
+            t[c] = t = t.get(c, Trie())
+        t[None] = True
+
 class RabinKarp:
     def __init__(self, A):
+        if isinstance(A, str):
+            A = (ord(c)-ord('a')+7 for c in A)
         self.MOD = MOD = 344555666677777
         self.pre = pre = [0]
         self.pinvs = pinvs = [1]
@@ -144,6 +152,23 @@ class RabinKarp:
             pinvs.append(pinvs[-1]*Pinv % MOD)
     def query(self, i, j):
         return (self.pre[j] - self.pre[i]) * self.pinvs[i] % self.MOD
+
+class KMP:
+    def __init__(self, A):
+        N = len(A)
+        self.P = [0]*N
+        j = 0
+        for i in range(1, N):
+            while j and A[i] != A[j]: j = self.P[j-1]
+            j = self.P[i] = j + (A[i] == A[j])
+        self.Z = [0]*N
+        l = r = -1
+        for i in range(1, N):
+            j = 0 if i >= r else min(r-i, self.Z[i-l])
+            while i+j < N and A[i+j] == A[j]: j += 1
+            if i+j > r: l, r = i, i+j
+            self.z[i] = j
+        self.Z[0] = N
 
 class mint(int):
     def __new__(cls, value): return super().__new__(cls, value % MOD)
