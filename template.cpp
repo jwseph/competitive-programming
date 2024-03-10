@@ -2,19 +2,40 @@
 using namespace std;
 
 #define MOD 1000000007
-#define sz(x) ((int)(x).size())
 #define ll long long
 #define str string
 #define vr vector
-#define pii pair<int, int>
+#define pii array<int, 2>
 #define f first
 #define s second
 #define pb push_back
 #define ins insert
-#define all(v) (v).begin(), (v).end()
+#define sz(x) ((int)(x).size())
+#define all(x) (x).begin(), (x).end()
+
+template<class K> using heap = priority_queue<K, vector<K>, greater<>>;
 
 const int d4r[4] = {0, 1, 0, -1}, d4c[4] = {1, 0, -1, 0};
 const int d8r[8] = {0, -1, -1, -1, 0, 1, 1, 1}, d8c[8] = {1, 1, 0, -1, -1, -1, 0, 1};
+const array<int, 2> d4[4] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
+const string D1 = "RULD", D2 = "LDRU";
+
+// void dfs(int r, int c) {
+//     if (r < 0 || r >= R || c < 0 || c >= C) return;
+//     if (V[r][c]) return;
+//     V[r][c] = 1;
+//     for (auto [dr, dc]: d4) {
+//         dfs(r+dr, c+dc);
+//     }
+// }
+
+// void dfs(int i) {
+//     if (V[i]) return;
+//     V[i] = 1;
+//     for (int j: A[i]) {
+//         dfs(j);
+//     }
+// }
 
 void fastio() {
     cin.tie(0), ios::sync_with_stdio(0);
@@ -187,3 +208,73 @@ vector<int> prefix(vector<int> A) {
     }
     return pi;
 }
+
+template<class T>
+struct MedianSet {
+    using ll = long long;
+    oset<pair<T, int>> S;
+    map<T, int> cnt;
+    pair<T, int> m;
+    ll cost = 0; T median;
+    void insert(T v) { insert({v, cnt[v]++}); }
+    void insert(pair<T, int> p) {
+        cost += abs(p.first-m.first);
+        S.insert(p);
+        update();
+    }
+    void erase(T v) { erase({v, --cnt[v]}); }
+    void erase(pair<T, int> p) {
+        cost -= abs(p.first-m.first);
+        S.erase(p);
+        update();
+    }
+    void update() {
+        if (!size()) return;
+        ll l = (size()-1)/2, r = size()-1-l;
+        pair<T, int> n = *S.find_by_order(l);
+        ll d = abs(m.first-n.first);
+        cost += d * (n < m ? (r-(l+1)) : n > m ? (l-(r+1)) : 0);
+        m = n, median = m.first;
+    }
+    int size() {
+        return S.size();
+    }
+};
+
+struct SCC {
+    int N, NC = 0;
+    vector<vector<int>> A[2];
+    vector<int> C, O;
+    vector<bool> V;
+    SCC(int N) : N(N) {
+        A[0].resize(N);
+        A[1].resize(N);
+        V.resize(N);
+        C.assign(N, -1);
+    }
+    void add(int i, int j) {
+        A[0][i].push_back(j);
+        A[1][j].push_back(i);
+    }
+    void dfs1(int i) {
+        if (V[i]) return;
+        V[i] = 1;
+        for (int j: A[0][i]) dfs1(j);
+        O.push_back(i);
+    }
+    void dfs2(int i, int c) {
+        if (C[i] >= 0) return;
+        C[i] = c;
+        for (int j: A[1][i]) dfs2(j, c);
+    }
+    void sol() {
+        for (int i = 0; i < N; ++i) {
+            dfs1(i);
+        }
+        reverse(begin(O), end(O));
+        for (int i: O) {
+            if (C[i] >= 0) continue;
+            dfs2(i, NC++);
+        }
+    }
+};

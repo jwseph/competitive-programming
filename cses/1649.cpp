@@ -7,7 +7,7 @@ int N, NQ;
 
 int T[2*MAXN];
 void build() {
-    for (int i = N-1; i >= 0; --i) T[i] = min(T[2*i], T[2*i+1]);
+    for (int i = N-1; i; --i) T[i] = min(T[2*i], T[2*i+1]);
 }
 void modify(int i, int v) {
     T[i += N] = v;
