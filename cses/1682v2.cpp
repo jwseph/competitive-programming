@@ -7,35 +7,26 @@ struct SCC {
     vector<int> C, O;
     vector<bool> V;
     SCC(int N) : N(N) {
-        A[0].resize(N);
-        A[1].resize(N);
-        V.resize(N);
-        C.assign(N, -1);
+        A[0].resize(N), A[1].resize(N), V.resize(N), C.assign(N, -1);
     }
     void add(int i, int j) {
-        A[0][i].push_back(j);
-        A[1][j].push_back(i);
+        A[0][i].push_back(j), A[1][j].push_back(i);
     }
     void dfs1(int i) {
         if (V[i]) return;
         V[i] = 1;
-        for (int j: A[0][i]) dfs1(j);
+        for (int j: A[1][i]) dfs1(j);
         O.push_back(i);
     }
     void dfs2(int i, int c) {
         if (C[i] >= 0) return;
         C[i] = c;
-        for (int j: A[1][i]) dfs2(j, c);
+        for (int j: A[0][i]) dfs2(j, c);
     }
     void sol() {
-        for (int i = 0; i < N; ++i) {
-            dfs1(i);
-        }
+        for (int i = 0; i < N; ++i) dfs1(i);
         reverse(begin(O), end(O));
-        for (int i: O) {
-            if (C[i] >= 0) continue;
-            dfs2(i, NC++);
-        }
+        for (int i: O) if (C[i] < 0) dfs2(i, NC++);
     }
 };
 
@@ -55,13 +46,13 @@ int main() {
     }
     cout << "NO" << endl;
     for (int i = 0; i < N; ++i) {
-        if (G.C[i] == 1) {
+        if (G.C[i] == 0) {
             cout << i+1 << ' ';
             break;
         }
     }
     for (int i = 0; i < N; ++i) {
-        if (G.C[i] == 0) {
+        if (G.C[i] == 1) {
             cout << i+1 << endl;
             break;
         }

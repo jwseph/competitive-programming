@@ -1,4 +1,4 @@
-from functools import cache
+from functools import cache, cached_property
 from math import gcd, lcm, sqrt, isqrt, inf, ceil, prod, factorial
 from collections import Counter, deque, defaultdict
 from heapq import heappush, heappop
@@ -55,11 +55,18 @@ class Mod:
 class Trie(dict):
     def __init__(self, A=()):
         super().__init__()
-        for s in A: self.insert(s)
-    def insert(t, s):
+        self.end = False
+        for s in A: self.add(s)
+    def add(t, s):
         for c in s:
             t[c] = t = t.get(c, Trie())
-        t[None] = True
+        t.end = True
+    def find(t, s):
+        if t.end: yield 0
+        for i, c in enumerate(s):
+            if c not in t: return
+            t = t[c]
+            if t.end: yield i+1
 
 class RabinKarp:
     def __init__(self, A):
@@ -92,7 +99,7 @@ class KMP:
             j = 0 if i >= r else min(r-i, self.Z[i-l])
             while i+j < N and A[i+j] == A[j]: j += 1
             if i+j > r: l, r = i, i+j
-            self.z[i] = j
+            self.Z[i] = j
         self.Z[0] = N
 
 class Primes:  # ty 小羊肖恩, https://codeforces.com/blog/entry/54090
@@ -167,5 +174,23 @@ class Primes:  # ty 小羊肖恩, https://codeforces.com/blog/entry/54090
     #             res += x//prod(pf) * (-1)**k
     #     return res
 
+class Tree:
+    def __init__(self, E):
+        self.A = defaultdict(list)
+        for i, j in E:
+            self.A[i].append(j)
+            self.A[j].append(i)
+    def farthest(self, i, p=-1):
+        res = 0, i
+        for j in self.A[i]:
+            if j == p: continue
+            d, k = self.farthest(j, i)
+            res = max(res, (d+1, k))
+        return res
+    def diameter(self):
+        if not self.A: return 0
+        return self.farthest(self.farthest(0)[1])[0]
+
 # ORDERED SET
 # from sortedcontainers import SortedList
+# sl = SortedList(); sl.add(5); sl.index(5) == 1; sl.discard(5)
