@@ -69,6 +69,15 @@ struct Node {
     }
 };
 
+template<class I>
+void compress(I l, I r) {
+    vector<int> v(l, r);
+    sort(begin(v), end(v));
+    v.erase(unique(begin(v), end(v)), end(v));
+    map<int, int> inv;
+    for (int a: v) inv[a] = inv.size();
+    while (l != r) *(l++) = inv[*l]+1;
+}
 
 struct BIT {
     vector<ll> t; int n;

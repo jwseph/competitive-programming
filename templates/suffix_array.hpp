@@ -73,3 +73,25 @@ struct SuffixArray {  // TODO: UPDATE TO USE willy108 VERS https://pastebin.com/
         return lcp.query(l, r);
     }
 };
+
+struct FastStringCompare {
+    string str;
+    vector<int> idx;
+    SuffixArray sa("");
+    void add(string s) {
+        idx.push_back(i);
+        str += s;
+    }
+    void init() {
+        sa = SuffixArray(str);
+    }
+    int sz(int i) {
+        if (i == idx.size()-1) return str.size() - idx.back();
+        return idx[i+1]-idx[i];
+    }
+    bool cmp(int i, int j) {
+        int lcp = sa.getLCP(idx[i], idx[j]);
+        if (lcp >= min(sz(i), sz(j))) return sz(i) < sz(j);
+        return str[idx[i]+lcp] < str[idx[j]+lcp];
+    }
+};
