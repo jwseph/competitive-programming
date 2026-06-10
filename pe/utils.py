@@ -58,11 +58,14 @@ class Trie(dict):
     def __init__(self, A=()):
         super().__init__()
         self.end = False
+        self.val = None
         for s in A: self.add(s)
-    def add(t, s):
+    def add(t, s, val=None):
         for c in s:
-            t[c] = t = t.get(c, Trie())
+            t[c] = t.get(c, Trie())
+            t = t[c]
         t.end = True
+        t.val = val
     def find(t, s):
         if t.end: yield 0
         for i, c in enumerate(s):
@@ -158,6 +161,20 @@ class Tree:
             r //= 2
         return self.f(L, R)
 
+class SparseTable:
+    def __init__(self, a, f):
+        n = len(a)
+        k = n.bit_length()
+        self.f = f
+        self.t = t = [[0]*n for _ in range(k)]
+        t[0][:] = a
+        for i in range(1, k):
+            for j in range(n-(1<<i)+1):
+                t[i][j] = f(t[i-1][j], t[i-1][j+(1<<i-1)])
+    def query(self, l, r):
+        i = (r-l+1).bit_length()-1
+        return self.f(self.t[i][l], self.t[i][r+1-(1<<i)])
+
 class KMP:
     def __init__(self, A):
         N = len(A)
@@ -246,6 +263,163 @@ class Primes:  # ty 小羊肖恩, https://codeforces.com/blog/entry/54090
     #         for pf in combinations(P, k):
     #             res += x//prod(pf) * (-1)**k
     #     return res
+
+'''
+
+using ll = long long;
+
+class Primes {
+public:
+    int n;
+    vector<int> primes;
+    vector<int> lp;
+    vector<ll> phi;
+
+    Primes(int n) : n(n) {
+        lp.assign(n+1, 0);
+        phi.assign(n+1, 0);
+
+        lp[1] = 1;
+        phi[1] = 1;
+        for (int i = 2; i <= n; ++i) {
+            if (lp[i] == 0) {
+                lp[i] = i;
+                primes.push_back(i);
+                phi[i] = i-1;
+            }
+            for (int p : primes) {
+                if (1LL*i*p > n) break;
+                lp[i*p] = p;
+                if (p == lp[i]) {
+                    phi[i*p] = phi[i]*p;
+                    break;
+                }
+                phi[i*p] = phi[i]*phi[p];
+            }
+        }
+    }
+
+    vector<bool> get_slice(ll l, ll r) {
+        vector<bool> P(r-l, true);
+        for (ll i = 0; i < 2-l && i < (ll)P.size(); ++i) P[i] = false;
+        for (ll p : primes) {
+            if (p*p > r) break;
+            for (ll j = max(p*p, (l+p-1)/p*p); j < r; j += p) {
+                if (j >= l) P[j-l] = false;
+            }
+        }
+        return P;
+    }
+
+    bool operator[](ll x) {
+        if (x < 2) return false;
+        if (x <= n) return lp[x] == x;
+        for (ll p : primes) {
+            if (p*p > x) break;
+            if (x%p == 0) return false;
+        }
+        return true;
+    }
+
+    vector<pair<ll, int>> factorization(ll x) {
+        vector<pair<ll, int>> res;
+        for (ll p : primes) {
+            if (p*p > x) break;
+            if (x <= n) break;
+            if (x%p == 0) {
+                int cnt = 0;
+                while (x%p == 0) { cnt++; x /= p; }
+                res.push_back({p, cnt});
+            }
+        }
+        while (1 < x && x <= n) {
+            ll p = lp[x];
+            int cnt = 0;
+            while (x%p == 0) { cnt++; x /= p; }
+            res.push_back({p, cnt});
+        }
+        if (x >= n && x > 1) {
+            res.push_back({x, 1});
+        }
+        return res;
+    }
+
+    vector<ll> factors(ll x) {
+        vector<ll> res = {1};
+        for (auto& [p, b] : factorization(x)) {
+            int sz = res.size();
+            for (int j = 1; j <= b; ++j) {
+                ll pj = 1;
+                for (int k = 0; k < j; ++k) pj *= p;
+                for (int i = 0; i < sz; ++i) {
+                    res.push_back(res[i] * pj);
+                }
+            }
+        }
+        return res;
+    }
+};
+
+'''
+
+# Q3
+
+# flip, swap, and cross
+def sol(s, t, flip, swap, cross):
+    z = o = 0
+    for x, y in zip(s, t):
+        if x == y: continue
+        if x == '0': z += 1
+        else: o += 1
+
+    # one flip solves a digit
+    # flip = oz -= 1 OR zo -= 1
+    # one swap solves two digits provided two digits exist (intersection of zo and oz)
+    # swap = oz -= 1; zo -= 1 OR oz += 1; zo += 1 provided n-oz-zo >= 2
+    # cross = oz -= 2 OR oz -= 1 and zo += 1
+
+    # 3 0
+    # 2 1 cross
+    # 1 0
+
+    for _ in range(10):
+        swap = min(swap, flip*2, cross*2)
+        cross = min(cross, flip*2)
+    res = 0
+    t = min(z, o)
+    z -= t
+    o -= t
+    res += t*swap
+    k = max(z, o)
+    t = k//2
+    k -= t
+    res += t*cross
+    t = k
+    k -= t
+    res += t*flip
+    return res
+
+    # one cross solves two digits 
+
+    # 0100001
+    # 1011101
+    # 
+    a = []
+
+
+# Q2
+
+def validate(a):
+    t, l, r, b = a
+    return t[0] == l[0] and t[3] == r[0] and b[0] == l[3] and b[3] == r[3]
+
+def sol(a):
+    res = []
+    for arr in permutations(a):
+        arr = list(arr)
+        if validate(arr):
+            res.append(arr)
+    return sorted(res)
 
 class TreeGraph:
     def __init__(self, E):
