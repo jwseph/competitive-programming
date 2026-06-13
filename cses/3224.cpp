@@ -15,13 +15,6 @@ struct chash {
         static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
         return splitmix64(x + FIXED_RANDOM);
     }
-    size_t operator()(const array<int, 26>& arr) const {
-        size_t seed = 0;
-        for (int x: arr) {
-            seed ^= (*this)(x) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        }
-        return seed;
-    }
 };
 template<class K, class V> using umap = unordered_map<K, V, chash>;
 template<class K> using uset = unordered_set<K, chash>;
@@ -41,7 +34,7 @@ struct DSU {
     int unite(int i, int j) {
         i = find(i), j = find(j);
         if (i == j) return i;
-        if (-p[i] < -p[j]) swap(i, j);
+        if (p[i] > p[j]) swap(i, j);
         p[i] += p[j], p[j] = i;
         return i;
     }
@@ -49,7 +42,7 @@ struct DSU {
 
 template<class T>
 struct Tree {
-    const T def{};
+    static constexpr T def{};
     T f(T a, T b) { return a+b; }
     vector<T> t; int n;
     Tree(int n): t(2*n, def), n(n) {}
@@ -66,14 +59,12 @@ struct Tree {
     }
 };
 struct Node {
-    int w = 0, h = 0;
-    Node() {}
-    Node(int x): w(x), h(x) {}
-    Node(int w, int h), w(w), h(h) {}
+    int w;
+    Node(): w(0) {}
+    Node(int w): w(w) {}
     friend Node operator+(const Node& a, const Node& b) {
         return {
-            a.w+b.w,
-            a.h+b.h
+            a.w+b.w
         };
     }
 };
@@ -83,10 +74,9 @@ void compress(I l, I r) {
     vector<int> v(l, r);
     sort(begin(v), end(v));
     v.erase(unique(begin(v), end(v)), end(v));
-    while (l != r) {
-        int i = lower_bound(begin(v), end(v), *l) - begin(v);
-        *(l++) = i+1;
-    }
+    map<int, int> inv;
+    for (int a: v) inv[a] = inv.size();
+    while (l != r) *(l++) = inv[*l]+1;
 }
 
 struct BIT {
@@ -172,11 +162,9 @@ struct Lift {
     }
 };
 
-
-
 template<class T>
-struct HeavyLight {  // insert Tree template above.
-    int N, timer = 0;  // usage: call all functions in order
+struct HeavyLight {
+    int N, timer = 0;
     vector<vector<int>> A;
     vector<int> P, D, sz, R, V;  // parent, depth, size, root, visit time
     Tree<T> tr;
@@ -327,49 +315,22 @@ struct Modular {
     }
 };
 
-
-using arr2 = array<ll, 2>;
 struct Primes {
     int n;
-    vector<int> primes, lp;
+    vector<int> lp, pr;
     Primes(int n): n(n), lp(n+1) {
         lp[1] = 1;
         for (int i = 2; i <= n; ++i) {
             if (!lp[i]) {
                 lp[i] = i;
-                primes.push_back(i);
+                pr.push_back(i);
             }
-            for (int p: primes) {
-                if (i*p > n) break;
-                lp[i*p] = p;
-            }
-        }
-    }
-    vector<arr2> fzn(ll x) {
-        if (x > (ll)n*n) {
-            cout << "range error" << endl;
-        }
-        vector<arr2> res;
-        for (ll p: primes) {
-            if (p*p > x || x <= n) break;
-            if (x%p == 0) {
-                int k = 0;
-                while (x%p == 0) x /= p, k++;
-                res.push_back({p, k});
+            for (int j = 0; i*pr[j] <= n && pr[j] <= lp[i]; ++j) {
+                lp[i*pr[j]] = pr[j];
             }
         }
-        while (1 < x && x <= n) {
-            int p = lp[x], k = 0;
-            while (x%p == 0) x /= p, k++;
-            res.push_back({p, k});
-        }
-        if (x > n && x > 1) {
-            res.push_back({x, 1});
-        }
-        return res;
     }
 };
-
 
 // debugging tips
 // - check no ; on for() one-liner
@@ -377,6 +338,40 @@ struct Primes {
 // - try #define int long long
 // - try #define endl '\n'
 // - try a small checker program
-// 
-// advanced debugging tips
-// - sorting slightly wrong? (e.g. topo), try double reversal
+
+hmap<int, int> cnt;
+map<int, set<int>> inv;
+int n, k, a[200005];
+
+void insert(int v) {
+    if (cnt.find(v) == cnt.end()) {
+        cnt[v] = 0;
+        inv[0].insert(v);
+    }
+    inv[cnt[v]].erase(v);
+    cnt[v]++;
+    inv[cnt[v]].insert(v);
+}
+
+void erase(int v) {
+    inv[cnt[v]].erase(v);
+    if (inv[cnt[v]].empty()) {
+        inv.erase(cnt[v]);
+    }
+    cnt[v]--;
+    inv[cnt[v]].insert(v);
+}
+
+int main() {
+    cin >> n >> k;
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        insert(a[i]);
+        if (i-k >= 0) {
+            erase(a[i-k]);
+        }
+        if (i >= k-1) {
+            cout << *inv.rbegin()->second.begin() << ' ';
+        }
+    }
+}
